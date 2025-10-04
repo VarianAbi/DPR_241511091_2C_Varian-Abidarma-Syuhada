@@ -9,42 +9,29 @@ use App\Models\KomponenGajiModel;
 
 class PenggajianController extends BaseController
 {
-    /**
-     * Menampilkan daftar penggajian.
-     * Akan kita buat di commit berikutnya.
-     */
     public function index()
     {
-        echo "<h1>Halaman Daftar Penggajian (Akan dibuat)</h1>";
-        echo '<a href="' . base_url('admin/penggajian/new') . '">Tambah Data Penggajian</a>';
+        $model = new PenggajianModel();
+        $data['penggajian'] = $model->getPenggajianGrouped();
+        return view('admin/penggajian/index', $data);
     }
 
-    /**
-     * Menampilkan form untuk menambah data penggajian baru.
-     */
     public function new()
     {
         $anggotaModel = new AnggotaModel();
         $komponenModel = new KomponenGajiModel();
-
-        // Ambil semua data anggota dan komponen untuk ditampilkan di form
         $data['anggota'] = $anggotaModel->findAll();
         $data['komponen_gaji'] = $komponenModel->findAll();
-
         return view('admin/penggajian/create', $data);
     }
 
-    /**
-     * Memproses data dari form tambah penggajian.
-     */
     public function create()
     {
-        $model = new PenggajianModel();
-
+        $db = \Config\Database::connect(); // Panggil koneksi database
+        
         $idAnggota = $this->request->getPost('id_anggota');
         $idKomponenArray = $this->request->getPost('id_komponen');
-
-        // Validasi dasar
+        
         if (empty($idAnggota) || empty($idKomponenArray)) {
             return redirect()->back()->withInput()->with('error', 'Anggota dan minimal satu komponen gaji harus dipilih.');
         }
@@ -52,26 +39,23 @@ class PenggajianController extends BaseController
         $berhasil = 0;
         $gagal = 0;
 
-        // Loop sebanyak komponen gaji yang dipilih
         foreach ($idKomponenArray as $idKomponen) {
-            // Cek duplikasi: apakah anggota ini sudah punya komponen yg sama?
-            $isDuplicate = $model->where([
-                'id_anggota' => $idAnggota,
+            // Cek duplikasi langsung ke database
+            $isDuplicate = $db->table('penggajian')->where([
+                'id_anggota' => $idAnggota, 
                 'id_komponen_gaji' => $idKomponen
-            ])->first();
+            ])->get()->getRow();
 
             if ($isDuplicate) {
-                // Jika sudah ada, lewati dan hitung sebagai gagal
                 $gagal++;
-                continue; // Lanjut ke komponen berikutnya
+                continue;
             }
 
-            // Jika tidak duplikat, simpan data
-            $dataToSave = [
+            // Perintah INSERT langsung ke database
+            $db->table('penggajian')->insert([
                 'id_anggota' => $idAnggota,
-                'id_komponen_gaji' => $idKomponen,
-            ];
-            $model->save($dataToSave);
+                'id_komponen_gaji' => $idKomponen
+            ]);
             $berhasil++;
         }
 
@@ -79,7 +63,19 @@ class PenggajianController extends BaseController
         if ($gagal > 0) {
             $message .= " Gagal menambahkan {$gagal} komponen karena sudah ada sebelumnya.";
         }
-
         return redirect()->to('/admin/penggajian')->with('message', $message);
+    }
+
+    public function delete($id_anggota = null, $id_komponen_gaji = null)
+    {
+        $db = \Config\Database::connect(); // Panggil koneksi database
+
+        // Perintah DELETE langsung ke database
+        $db->table('penggajian')->where([
+            'id_anggota' => $id_anggota,
+            'id_komponen_gaji' => $id_komponen_gaji
+        ])->delete();
+
+        return redirect()->to('/admin/penggajian')->with('message', 'Satu komponen gaji berhasil dihapus.');
     }
 }
