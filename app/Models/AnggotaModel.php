@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Models;
+
+use CodeIgniter\Model;
+
+class AnggotaModel extends Model
+{
+    protected $table            = 'anggota';
+    protected $primaryKey       = 'id_anggota';
+    protected $useAutoIncrement = false; // Karena ID anggota kita input manual
+    protected $returnType       = 'array';
+    protected $allowedFields    = [
+        'id_anggota', 'gelar_depan', 'nama_depan', 'nama_belakang',
+        'gelar_belakang', 'jabatan', 'status_pernikahan', 'jumlah_anak'
+    ];
+}
