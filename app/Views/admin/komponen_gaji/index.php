@@ -61,7 +61,7 @@
                                         <td>Rp <?= number_format($row['nominal'], 2, ',', '.') ?></td>
                                         <td>Per-<?= esc($row['satuan']) ?></td>
                                         <td>
-                                            <a href="#" class="btn btn-sm btn-warning">Ubah</a>
+                                            <a href="<?= base_url('admin/komponen-gaji/edit/' . $row['id_komponen_gaji']) ?>" class="btn btn-sm btn-warning">Ubah</a>
                                             <a href="#" class="btn btn-sm btn-danger">Hapus</a>
                                         </td>
                                     </tr>

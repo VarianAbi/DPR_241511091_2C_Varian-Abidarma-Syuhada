@@ -17,7 +17,6 @@ $routes->get('logout', 'AuthController::logout');
 $routes->group('admin', ['filter' => 'auth'], static function ($routes) {
 
     $routes->get('dashboard', static function () {
-        // Ini bisa kita ubah nanti menjadi halaman dashboard yang sebenarnya
         return '<h1>Selamat Datang di Dashboard, ' . session()->get('user_username') . '!</h1>
                 <p><a href="' . base_url('admin/anggota') . '">Kelola Anggota</a></p>
                 <p><a href="' . base_url('admin/komponen-gaji') . '">Kelola Komponen Gaji</a></p>
@@ -32,8 +31,10 @@ $routes->group('admin', ['filter' => 'auth'], static function ($routes) {
     $routes->put('anggota/update/(:segment)', 'Admin\AnggotaController::update/$1');
     $routes->delete('anggota/delete/(:segment)', 'Admin\AnggotaController::delete/$1');
 
-    // RUTE BARU: untuk fitur Komponen Gaji
+    // Rute untuk fitur Komponen Gaji
     $routes->get('komponen-gaji', 'Admin\KomponenGajiController::index');
     $routes->get('komponen-gaji/new', 'Admin\KomponenGajiController::new');
     $routes->post('komponen-gaji/create', 'Admin\KomponenGajiController::create');
+    $routes->get('komponen-gaji/edit/(:segment)', 'Admin\KomponenGajiController::edit/$1'); // RUTE BARU
+    $routes->put('komponen-gaji/update/(:segment)', 'Admin\KomponenGajiController::update/$1'); // RUTE BARU
 });

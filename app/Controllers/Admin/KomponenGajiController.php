@@ -7,19 +7,14 @@ use App\Models\KomponenGajiModel;
 
 class KomponenGajiController extends BaseController
 {
-    /**
-     * Menampilkan daftar semua komponen gaji dengan fitur pencarian.
-     */
     public function index()
     {
         $model = new KomponenGajiModel();
         $keyword = $this->request->getVar('keyword');
 
         if ($keyword) {
-            // Jika ada keyword pencarian, panggil method search
             $data['komponen_gaji'] = $model->search($keyword);
         } else {
-            // Jika tidak ada, tampilkan semua data
             $data['komponen_gaji'] = $model->findAll();
         }
 
@@ -28,22 +23,14 @@ class KomponenGajiController extends BaseController
         return view('admin/komponen_gaji/index', $data);
     }
 
-    /**
-     * Menampilkan form untuk menambah komponen gaji baru.
-     */
     public function new()
     {
         return view('admin/komponen_gaji/create');
     }
 
-    /**
-     * Memproses data dari form tambah komponen gaji.
-     */
     public function create()
     {
         $model = new KomponenGajiModel();
-
-        // Aturan validasi
         $rules = [
             'id_komponen_gaji' => 'required|is_unique[komponen_gaji.id_komponen_gaji]|numeric',
             'nama_komponen'    => 'required|max_length[100]',
@@ -65,9 +52,55 @@ class KomponenGajiController extends BaseController
             'nominal'          => $this->request->getPost('nominal'),
             'satuan'           => $this->request->getPost('satuan'),
         ];
-
         $model->save($data);
 
         return redirect()->to('/admin/komponen-gaji')->with('message', 'Komponen gaji berhasil ditambahkan!');
+    }
+
+    /**
+     * FUNGSI BARU: Menampilkan form untuk mengedit komponen gaji.
+     */
+    public function edit($id = null)
+    {
+        $model = new KomponenGajiModel();
+        $data['komponen'] = $model->find($id);
+
+        if (empty($data['komponen'])) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data Komponen Gaji Tidak Ditemukan');
+        }
+
+        return view('admin/komponen_gaji/edit', $data);
+    }
+
+    /**
+     * FUNGSI BARU: Memproses pembaruan data komponen gaji.
+     */
+    public function update($id = null)
+    {
+        $model = new KomponenGajiModel();
+
+        $rules = [
+            'nama_komponen'  => 'required|max_length[100]',
+            'kategori'       => 'required',
+            'jabatan'        => 'required',
+            'nominal'        => 'required|numeric',
+            'satuan'         => 'required'
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput();
+        }
+
+        $data = [
+            'nama_komponen' => $this->request->getPost('nama_komponen'),
+            'kategori'      => $this->request->getPost('kategori'),
+            'jabatan'       => $this->request->getPost('jabatan'),
+            'nominal'       => $this->request->getPost('nominal'),
+            'satuan'        => $this->request->getPost('satuan'),
+        ];
+
+        $model->update($id, $data);
+
+        return redirect()->to('/admin/komponen-gaji')->with('message', 'Komponen gaji berhasil diperbarui!');
     }
 }
