@@ -24,10 +24,10 @@ class AuthController extends BaseController
     {
         $session = session();
         $model = new UserModel();
-
+        
         $username = $this->request->getVar('username');
         $password = $this->request->getVar('password');
-
+        
         $user = $model->where('username', $username)->first();
 
         if ($user) {
@@ -41,13 +41,12 @@ class AuthController extends BaseController
                 ];
                 $session->set($sessionData);
 
-                // LOGIKA BARU: Arahkan berdasarkan role
-                if ($user['role'] === 'admin') {
+                // Arahkan berdasarkan role
+                if ($user['role'] === 'Admin') {
                     return redirect()->to('/admin/dashboard');
-                } elseif ($user['role'] === 'public') {
+                } elseif ($user['role'] === 'Public') {
                     return redirect()->to('/transparansi');
                 } else {
-                    // Jika role tidak dikenal, default ke halaman login
                     return redirect()->to('/login')->with('error', 'Role tidak dikenal.');
                 }
 

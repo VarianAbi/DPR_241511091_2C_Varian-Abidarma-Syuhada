@@ -5,36 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login Aplikasi Gaji DPR</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-card { max-width: 400px; width: 100%; }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="row justify-content-center mt-5">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header bg-primary text-white text-center">
-                        <h4>LOGIN ADMIN</h4>
+    <div class="login-container">
+        <div class="card shadow-sm login-card">
+            <div class="card-body p-5">
+                <h3 class="card-title text-center mb-4">LOGIN</h3>
+                
+                <?php if(session()->getFlashdata('error')): ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?= session()->getFlashdata('error') ?>
                     </div>
-                    <div class="card-body">
-                        <?php if(session()->getFlashdata('error')): ?>
-                            <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
-                        <?php endif; ?>
+                <?php endif; ?>
 
-                        <form action="<?= base_url('login/process') ?>" method="post">
-                            <?= csrf_field() ?>
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" name="username" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" name="password" class="form-control" required>
-                            </div>
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Login</button>
-                            </div>
-                        </form>
+                <form action="<?= base_url('login/process') ?>" method="post">
+                    <?= csrf_field() ?>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
                     </div>
-                </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
