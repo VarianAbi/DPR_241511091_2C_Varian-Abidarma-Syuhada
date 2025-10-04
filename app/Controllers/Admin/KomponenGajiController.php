@@ -57,9 +57,6 @@ class KomponenGajiController extends BaseController
         return redirect()->to('/admin/komponen-gaji')->with('message', 'Komponen gaji berhasil ditambahkan!');
     }
 
-    /**
-     * FUNGSI BARU: Menampilkan form untuk mengedit komponen gaji.
-     */
     public function edit($id = null)
     {
         $model = new KomponenGajiModel();
@@ -72,9 +69,6 @@ class KomponenGajiController extends BaseController
         return view('admin/komponen_gaji/edit', $data);
     }
 
-    /**
-     * FUNGSI BARU: Memproses pembaruan data komponen gaji.
-     */
     public function update($id = null)
     {
         $model = new KomponenGajiModel();
@@ -102,5 +96,16 @@ class KomponenGajiController extends BaseController
         $model->update($id, $data);
 
         return redirect()->to('/admin/komponen-gaji')->with('message', 'Komponen gaji berhasil diperbarui!');
+    }
+
+    /**
+     * FUNGSI BARU: Menghapus data komponen gaji.
+     */
+    public function delete($id = null)
+    {
+        $model = new KomponenGajiModel();
+        $model->delete($id);
+
+        return redirect()->to('/admin/komponen-gaji')->with('message', 'Komponen gaji berhasil dihapus!');
     }
 }

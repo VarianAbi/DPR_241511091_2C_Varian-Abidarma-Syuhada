@@ -35,6 +35,7 @@ $routes->group('admin', ['filter' => 'auth'], static function ($routes) {
     $routes->get('komponen-gaji', 'Admin\KomponenGajiController::index');
     $routes->get('komponen-gaji/new', 'Admin\KomponenGajiController::new');
     $routes->post('komponen-gaji/create', 'Admin\KomponenGajiController::create');
-    $routes->get('komponen-gaji/edit/(:segment)', 'Admin\KomponenGajiController::edit/$1'); // RUTE BARU
-    $routes->put('komponen-gaji/update/(:segment)', 'Admin\KomponenGajiController::update/$1'); // RUTE BARU
+    $routes->get('komponen-gaji/edit/(:segment)', 'Admin\KomponenGajiController::edit/$1');
+    $routes->put('komponen-gaji/update/(:segment)', 'Admin\KomponenGajiController::update/$1');
+    $routes->delete('komponen-gaji/delete/(:segment)', 'Admin\KomponenGajiController::delete/$1'); // RUTE BARU
 });

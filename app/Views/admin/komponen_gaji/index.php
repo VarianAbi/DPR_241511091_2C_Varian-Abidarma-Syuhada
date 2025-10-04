@@ -60,9 +60,14 @@
                                         <td><?= esc($row['jabatan']) ?></td>
                                         <td>Rp <?= number_format($row['nominal'], 2, ',', '.') ?></td>
                                         <td>Per-<?= esc($row['satuan']) ?></td>
-                                        <td>
-                                            <a href="<?= base_url('admin/komponen-gaji/edit/' . $row['id_komponen_gaji']) ?>" class="btn btn-sm btn-warning">Ubah</a>
-                                            <a href="#" class="btn btn-sm btn-danger">Hapus</a>
+                                        <td class="d-flex">
+                                            <a href="<?= base_url('admin/komponen-gaji/edit/' . $row['id_komponen_gaji']) ?>" class="btn btn-sm btn-warning me-1">Ubah</a>
+
+                                            <form action="<?= base_url('admin/komponen-gaji/delete/' . $row['id_komponen_gaji']) ?>" method="post" onsubmit="return confirm('Apakah Anda yakin ingin menghapus komponen ini?');">
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <?= csrf_field() ?>
+                                                <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                                            </form>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
