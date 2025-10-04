@@ -9,7 +9,14 @@ class AuthController extends BaseController
 {
     public function index()
     {
-        // Menampilkan halaman login
+        // Jika sudah login, jangan tampilkan halaman login lagi
+        if (session()->get('logged_in')) {
+            if (session()->get('user_role') === 'admin') {
+                return redirect()->to('/admin/dashboard');
+            } else {
+                return redirect()->to('/transparansi');
+            }
+        }
         return view('auth/login');
     }
 
@@ -21,11 +28,9 @@ class AuthController extends BaseController
         $username = $this->request->getVar('username');
         $password = $this->request->getVar('password');
 
-        // Cari user berdasarkan username
         $user = $model->where('username', $username)->first();
 
         if ($user) {
-            // Verifikasi password
             if (password_verify($password, $user['password'])) {
                 // Buat session data
                 $sessionData = [
@@ -36,20 +41,21 @@ class AuthController extends BaseController
                 ];
                 $session->set($sessionData);
 
-                // Arahkan ke dashboard admin jika rolenya 'Admin'
-                if ($user['role'] == 'Admin') {
+                // LOGIKA BARU: Arahkan berdasarkan role
+                if ($user['role'] === 'admin') {
                     return redirect()->to('/admin/dashboard');
+                } elseif ($user['role'] === 'public') {
+                    return redirect()->to('/transparansi');
                 } else {
-                    // Jika ada role lain, bisa diatur di sini
-                    return redirect()->to('/login')->with('error', 'Hanya Admin yang dapat login');
+                    // Jika role tidak dikenal, default ke halaman login
+                    return redirect()->to('/login')->with('error', 'Role tidak dikenal.');
                 }
+
             } else {
-                $session->setFlashdata('error', 'Password salah');
-                return redirect()->to('/login');
+                return redirect()->to('/login')->with('error', 'Password salah.');
             }
         } else {
-            $session->setFlashdata('error', 'Username tidak ditemukan');
-            return redirect()->to('/login');
+            return redirect()->to('/login')->with('error', 'Username tidak ditemukan.');
         }
     }
 
