@@ -24,6 +24,7 @@ $routes->group('admin', ['filter' => 'auth'], static function ($routes) {
     $routes->get('anggota', 'Admin\AnggotaController::index');
     $routes->get('anggota/new', 'Admin\AnggotaController::new');
     $routes->post('anggota/create', 'Admin\AnggotaController::create');
-    $routes->get('anggota/edit/(:segment)', 'Admin\AnggotaController::edit/$1'); // RUTE BARU
-    $routes->put('anggota/update/(:segment)', 'Admin\AnggotaController::update/$1'); // RUTE BARU
+    $routes->get('anggota/edit/(:segment)', 'Admin\AnggotaController::edit/$1');
+    $routes->put('anggota/update/(:segment)', 'Admin\AnggotaController::update/$1');
+    $routes->delete('anggota/delete/(:segment)', 'Admin\AnggotaController::delete/$1'); // RUTE BARU
 });

@@ -58,9 +58,6 @@ class AnggotaController extends BaseController
         return redirect()->to('/admin/anggota')->with('message', 'Data anggota berhasil ditambahkan!');
     }
 
-    /**
-     * FUNGSI BARU: Menampilkan form untuk mengedit data.
-     */
     public function edit($id = null)
     {
         $model = new AnggotaModel();
@@ -73,14 +70,9 @@ class AnggotaController extends BaseController
         return view('admin/anggota/edit', $data);
     }
 
-    /**
-     * FUNGSI BARU: Memproses pembaruan data anggota.
-     */
     public function update($id = null)
     {
         $model = new AnggotaModel();
-
-        // Aturan validasi bisa sedikit berbeda, misalnya ID tidak perlu is_unique lagi
         $rules = [
             'nama_depan'    => 'required|alpha_space|max_length[50]',
             'nama_belakang' => 'permit_empty|alpha_space|max_length[50]',
@@ -105,5 +97,16 @@ class AnggotaController extends BaseController
         $model->update($id, $data);
 
         return redirect()->to('/admin/anggota')->with('message', 'Data anggota berhasil diperbarui!');
+    }
+
+    /**
+     * FUNGSI BARU: Menghapus data anggota.
+     */
+    public function delete($id = null)
+    {
+        $model = new AnggotaModel();
+        $model->delete($id);
+
+        return redirect()->to('/admin/anggota')->with('message', 'Data anggota berhasil dihapus!');
     }
 }
