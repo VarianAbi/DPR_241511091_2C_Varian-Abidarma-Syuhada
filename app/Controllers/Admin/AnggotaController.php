@@ -8,14 +8,25 @@ use App\Models\AnggotaModel;
 class AnggotaController extends BaseController
 {
     /**
-     * Menampilkan daftar semua anggota.
-     * Akan kita lengkapi di commit berikutnya.
+     * Menampilkan daftar semua anggota dengan fitur pencarian.
      */
     public function index()
     {
-        // TODO: Tulis logika untuk menampilkan data di sini
-        echo "<h1>Halaman Daftar Anggota (Akan dibuat)</h1>";
-        echo '<a href="' . base_url('admin/anggota/new') . '">Tambah Anggota Baru</a>';
+        $model = new AnggotaModel();
+        $keyword = $this->request->getVar('keyword');
+
+        if ($keyword) {
+            // Jika ada keyword pencarian, panggil method search
+            $data['anggota'] = $model->search($keyword);
+        } else {
+            // Jika tidak ada, tampilkan semua data
+            $data['anggota'] = $model->findAll();
+        }
+
+        // Tambahkan keyword ke data untuk ditampilkan di view
+        $data['keyword'] = $keyword;
+
+        return view('admin/anggota/index', $data);
     }
 
     /**
@@ -45,7 +56,6 @@ class AnggotaController extends BaseController
         // Jalankan validasi
         if (!$this->validate($rules)) {
             // Jika validasi gagal, kembali ke form dengan pesan error
-            // Pesan error akan otomatis ditampilkan oleh view
             return redirect()->back()->withInput();
         }
 
